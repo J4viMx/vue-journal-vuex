@@ -5,13 +5,15 @@
                 type="text"
                 class="form-control"
                 placeholder="Buscar entrada"
+                v-model="term"
             >
         </div>
 
         <div class="entry-scrollarea">
             <EntryOnly
-                v-for="item in 100"
-                :key="item"
+                v-for="entry in entriesByTerm"
+                :key="entry.id"
+                :entry = "entry"
             />
         </div>
     </div>
@@ -19,9 +21,22 @@
 
 <script>
 import { defineAsyncComponent } from 'vue'
+import { mapGetters } from 'vuex'
+
 export default {
     components:{
         EntryOnly: defineAsyncComponent( () => import('./EntryOnly.vue') )
+    }, 
+    computed:{
+        ...mapGetters('journal', ['getEntriesByTerm']),
+        entriesByTerm () {
+            return this.getEntriesByTerm( this.term )
+        }
+    },
+    data(){
+        return{
+            term: ''
+        }
     }
 }
 </script>
